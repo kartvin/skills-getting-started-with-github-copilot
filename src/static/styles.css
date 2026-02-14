@@ -126,11 +126,32 @@ section h3 {
   text-overflow: ellipsis;
 }
 
+.participant-delete {
+  background: transparent;
+  border: none;
+  color: #c62828;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: 6px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.participant-delete:hover {
+  background-color: rgba(198,40,40,0.08);
+}
+.participant-delete:focus {
+  outline: 2px solid rgba(26,35,126,0.25);
+  outline-offset: 2px;
+}
+
 .participants-empty {
   color: #777;
   font-style: italic;
   padding: 6px 0;
-}
+} 
 
 .activity-card.full h4::after {
   content: " — Full";

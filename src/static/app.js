@@ -82,8 +82,46 @@ document.addEventListener("DOMContentLoaded", () => {
             text.textContent = email;
             text.title = email;
 
+            // Delete button (unregister participant)
+            const delBtn = document.createElement("button");
+            delBtn.type = "button";
+            delBtn.className = "participant-delete";
+            delBtn.title = `Remove ${email}`;
+            delBtn.setAttribute("aria-label", `Remove ${email}`);
+            delBtn.textContent = "✕";
+
+            delBtn.addEventListener("click", async (ev) => {
+              ev.stopPropagation();
+              if (!confirm(`Remove ${email} from ${name}?`)) return;
+              try {
+                const resp = await fetch(
+                  `/activities/${encodeURIComponent(name)}/participants?email=${encodeURIComponent(email)}`,
+                  { method: "DELETE" }
+                );
+                const resJson = await resp.json();
+                if (resp.ok) {
+                  messageDiv.textContent = resJson.message;
+                  messageDiv.className = "message success";
+
+                  // refresh to show updated participant list
+                  await fetchActivities();
+                } else {
+                  messageDiv.textContent = resJson.detail || "Failed to remove participant";
+                  messageDiv.className = "message error";
+                }
+              } catch (err) {
+                console.error("Error removing participant:", err);
+                messageDiv.textContent = "Failed to remove participant. Please try again.";
+                messageDiv.className = "message error";
+              } finally {
+                messageDiv.classList.remove("hidden");
+                setTimeout(() => messageDiv.classList.add("hidden"), 5000);
+              }
+            });
+
             li.appendChild(avatar);
             li.appendChild(text);
+            li.appendChild(delBtn);
             ul.appendChild(li);
           });
         } else {
